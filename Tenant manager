@@ -1,0 +1,153 @@
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Box } from "@mui/material";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
+import TenantManager from "./get/TenantManager";
+import GetTokenForPB from "./gem/GetTokenForPB";
+
+const App: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <Header />
+      <Box sx={{ display: "flex" }}>
+        <Sidebar />
+        <Box component="main" sx={{ flexGrow: 1, p: 3, paddingTop: "64px" }}>
+          <Routes>
+            <Route path="/" element={<Navigate to="/get/tenant-manager" />} />
+            <Route path="/get/tenant-manager" element={<TenantManager />} />
+            <Route path="/gem/get-token-for-pb" element={<GetTokenForPB />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Box>
+      </Box>
+    </BrowserRouter>
+  );
+};
+
+export default App;
+--------
+
+import React, { useState } from "react";
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Collapse,
+  IconButton,
+  ListItemButton,
+} from "@mui/material";
+import {
+  ExpandLess,
+  ExpandMore,
+  Menu as MenuIcon,
+} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+
+const Sidebar: React.FC = () => {
+  const [open, setOpen] = useState(true);
+  const [gemOpen, setGemOpen] = useState(true);
+  const [getOpen, setGetOpen] = useState(true);
+  const navigate = useNavigate();
+
+  return (
+    <>
+      <Drawer
+        variant="persistent"
+        anchor="left"
+        open={open}
+        sx={{
+          width: 240,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: 240,
+            boxSizing: "border-box",
+            marginTop: "64px",
+          },
+        }}
+      >
+        <List>
+          <ListItem>
+            <IconButton onClick={() => setOpen(!open)}>
+              <MenuIcon />
+            </IconButton>
+          </ListItem>
+
+          {/* GEM section */}
+          <ListItemButton onClick={() => setGemOpen(!gemOpen)}>
+            <ListItemText primary="GEM" />
+            {gemOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={gemOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ pl: 4 }} onClick={() => navigate("/gem/get-token-for-pb")}>
+                <ListItemText primary="Get Token for PB" />
+              </ListItemButton>
+            </List>
+          </Collapse>
+
+          {/* GET section */}
+          <ListItemButton onClick={() => setGetOpen(!getOpen)}>
+            <ListItemText primary="GET" />
+            {getOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={getOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ pl: 4 }} onClick={() => navigate("/get/tenant-manager")}>
+                <ListItemText primary="Tenant Manager" />
+              </ListItemButton>
+            </List>
+          </Collapse>
+        </List>
+      </Drawer>
+    </>
+  );
+};
+
+export default Sidebar;
+----------
+  import React from "react";
+import { AppBar, Toolbar, Typography } from "@mui/material";
+
+const Header: React.FC = () => {
+  return (
+    <AppBar position="fixed">
+      <Toolbar>
+        <Typography variant="h6" noWrap component="div">
+          My App
+        </Typography>
+      </Toolbar>
+    </AppBar>
+  );
+};
+
+export default Header;
+--------
+  import React from "react";
+import { Box, Typography } from "@mui/material";
+
+const GetTokenForPB: React.FC = () => {
+  return (
+    <Box>
+      <Typography variant="h5">Get Token for PB</Typography>
+      {/* Add your form or content here */}
+    </Box>
+  );
+};
+
+export default GetTokenForPB;
+------
+  import React from "react";
+import { Box, Typography } from "@mui/material";
+
+const TenantManager: React.FC = () => {
+  return (
+    <Box>
+      <Typography variant="h5">Tenant Manager</Typography>
+      {/* Existing form content here */}
+    </Box>
+  );
+};
+
+export default TenantManager;
